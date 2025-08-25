@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h2>Administración del parqueo</h2>
+
+<h3>Configuración actual</h3>
+<p>Espacios autos: <strong>{{ config.autos }}</strong></p>
+<p>Espacios motos: <strong>{{ config.motos }}</strong></p>
+<p>Tarifa auto: <strong>₡ {{ config.tarifa_auto }}</strong></p>
+<p>Tarifa moto: <strong>₡ {{ config.tarifa_moto }}</strong></p>
+<p>Método de cobro: <strong>{{ 'Fraccionado' if config.cobro_fraccionado else 'Horas completas' }}</strong></p>
+
+<hr>
+
+<h3>Cambiar cantidad de espacios</h3>
+<form action="{{ url_for('admin_view') }}" method="post">
+    <input type="hidden" name="accion" value="cambiar_autos">
+    <div class="form-row">
+        <label>Nueva cantidad de espacios para autos</label>
+        <input type="number" name="cantidad_autos" min="0" required>
+    </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">Actualizar</button>
+    </div>
+</form>
+
+<form action="{{ url_for('admin_view') }}" method="post" style="margin-top:8px;">
+    <input type="hidden" name="accion" value="cambiar_motos">
+    <div class="form-row">
+        <label>Nueva cantidad de espacios para motos</label>
+        <input type="number" name="cantidad_motos" min="0" required>
+    </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">Actualizar</button>
+    </div>
+</form>
+
+<hr>
+
+<h3>Cambiar tarifas</h3>
+<form action="{{ url_for('admin_view') }}" method="post">
+    <input type="hidden" name="accion" value="tarifa_auto">
+    <div class="form-row">
+        <label>Nueva tarifa AUTO (₡/hora)</label>
+        <input type="number" name="tarifa_auto" min="0" required>
+    </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">Actualizar</button>
+    </div>
+</form>
+
+<form action="{{ url_for('admin_view') }}" method="post" style="margin-top:8px;">
+    <input type="hidden" name="accion" value="tarifa_moto">
+    <div class="form-row">
+        <label>Nueva tarifa MOTO (₡/hora)</label>
+        <input type="number" name="tarifa_moto" min="0" required>
+    </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">Actualizar</button>
+    </div>
+</form>
+
+<hr>
+
+<h3>Método de cobro</h3>
+<form action="{{ url_for('admin_view') }}" method="post">
+    <input type="hidden" name="accion" value="cobro">
+    <div class="form-row">
+        <label>Método</label>
+        <select name="metodo_cobro" required>
+            <option value="horas" {% if not config.cobro_fraccionado %}selected{% endif %}>Solo horas completas</option>
+            <option value="fraccionado" {% if config.cobro_fraccionado %}selected{% endif %}>Fraccionado (media hora después de la primera)</option>
+        </select>
+    </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">Actualizar</button>
+        <a class="btn btn-secondary" href="{{ url_menu }}">Menú principal</a>
+    </div>
+</form>
+{% endblock %}

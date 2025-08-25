@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h2>Sacar vehículo</h2>
+
+<form method="post" action="{{ url_for('salir') }}">
+    <label for="placa">Placa:</label>
+    <input type="text" id="placa" name="placa" value="{{ placa }}" required>
+    <button type="submit" class="button-salida">Sacar</button>
+</form>
+
+{% if salida_ticket or ingreso_ticket %}
+    <div style="display:flex; gap:16px; margin-top:18px; flex-wrap:wrap; align-items:flex-start;">
+        {% if salida_ticket %}
+            <div class="ticket-salida">
+                <h3>Ticket de salida</h3>
+                <p><strong>Placa:</strong> {{ salida_ticket.placa }}</p>
+                <p><strong>Tipo:</strong> {{ salida_ticket.tipo }}</p>
+                <p><strong>Entrada:</strong> {{ salida_ticket.hora_entrada.strftime("%d/%m/%Y %H:%M:%S") if salida_ticket.hora_entrada else '' }}</p>
+                <p><strong>Salida:</strong> {{ salida_ticket.hora_salida.strftime("%d/%m/%Y %H:%M:%S") if salida_ticket.hora_salida else '' }}</p>
+                <p><strong>Total:</strong> ₡ {{ salida_ticket.total }}</p>
+            </div>
+        {% endif %}
+
+        {% if ingreso_ticket %}
+            <div class="ticket-entrada">
+                <h3>Ticket de ingreso (de cola)</h3>
+                <p><strong>Placa:</strong> {{ ingreso_ticket.placa }}</p>
+                <p><strong>Tipo:</strong> {{ ingreso_ticket.tipo }}</p>
+                <p><strong>Hora de registro:</strong> {{ ingreso_ticket.hora_entrada.strftime("%d/%m/%Y %H:%M:%S") if ingreso_ticket.hora_entrada else '' }}</p>
+                <p><strong>Espacio asignado:</strong> {{ ingreso_ticket.espacio|upper }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+{% endif %}
+
+<div style="margin-top:20px;">
+    <a class="btn btn-secondary" href="{{ url_menu }}">Menú principal</a>
+</div>
+{% endblock %}

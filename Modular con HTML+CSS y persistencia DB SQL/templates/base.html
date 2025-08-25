@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="top-left">
+            <h1 class="top-title">Parqueo ATH</h1>
+        </div>
+        <div class="top-right">
+            <div class="results-count">
+                Autos libres: {{ libres_autos }} | Motos libres: {{ libres_motos }}
+            </div>
+            <form class="top-search" action="{{ url_for('buscar') }}" method="get">
+                <input type="text" name="placa" placeholder="Buscar Vehículo registrado..." value="{{ request.args.get('placa','') }}">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="menu">
+        <a href="{{ url_for('ingresar') }}"><button>1. Ingresar vehículo</button></a>
+        <a href="{{ url_for('salir') }}"><button>2. Sacar vehículo</button></a>
+        <a href="{{ url_for('espacios') }}"><button>3. Ver espacios del parqueo</button></a>
+        <a href="{{ url_for('cola') }}"><button>4. Ver cola de espera</button></a>
+        <a href="{{ url_for('consultar') }}"><button>5. Consultar vehículo por placa</button></a>
+        <a href="{{ url_for('historial') }}"><button>6. Ver historial por placa</button></a>
+        <a href="{{ url_for('admin_view') }}"><button>7. Administración del parqueo</button></a>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash">
+        {% for msg in messages %}
+          <div>{{ msg }}</div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="layout">
+        <div class="panel-acciones">
+            {% block contenido %}{% endblock %}
+        </div>
+
+        <div class="matriz-wrapper">
+            <h2 class="matriz-title">Matriz del parqueo</h2>
+
+            <!-- Fila Espera -->
+            <h4>Espera</h4>
+            <div class="fila">
+                {% for casilla in matriz[0] %}
+                    <div class="espacio {{ 'ocupado' if casilla.ocupado else 'libre' }}">
+                        <div class="label">{{ casilla.label }}</div>
+                        <div class="valor">{{ casilla.placa if casilla.placa else 'Libre' }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Fila Valet -->
+            <h4>Valet</h4>
+            <div class="fila">
+                {% for casilla in matriz[1] %}
+                    <div class="espacio {{ 'ocupado' if casilla.ocupado else 'libre' }}">
+                        <div class="label">{{ casilla.label }}</div>
+                        <div class="valor">{{ casilla.placa if casilla.placa else 'Libre' }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Fila Motos -->
+            <h4>Motos</h4>
+            <div class="fila">
+                {% for casilla in matriz[2] %}
+                    <div class="espacio {{ 'ocupado' if casilla.ocupado else 'libre' }}">
+                        <div class="label">{{ casilla.label }}</div>
+                        <div class="valor">{{ casilla.placa if casilla.placa else 'Libre' }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Filas Autos -->
+            <h4>Autos</h4>
+            <div class="fila">
+                {% for casilla in matriz[3] %}
+                    <div class="espacio {{ 'ocupado' if casilla.ocupado else 'libre' }}">
+                        <div class="label">{{ casilla.label }}</div>
+                        <div class="valor">{{ casilla.placa if casilla.placa else 'Libre' }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            {% for fila in matriz[4:] %}
+                <div class="fila">
+                    {% for casilla in fila %}
+                        <div class="espacio {{ 'ocupado' if casilla.ocupado else 'libre' }}">
+                            <div class="label">{{ casilla.label }}</div>
+                            <div class="valor">{{ casilla.placa if casilla.placa else 'Libre' }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

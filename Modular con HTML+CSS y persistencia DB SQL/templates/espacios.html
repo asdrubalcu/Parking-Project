@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h2>Espacios del parqueo</h2>
+<p>Vista general de ocupación.</p>
+
+{% if listado %}
+    <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; margin-top:10px;">
+        <thead>
+            <tr style="background:#f4f4f4;">
+                <th>Tipo</th>
+                <th>Clave</th>
+                <th>Placa</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in listado %}
+                <tr>
+                    <td>{{ item.tipo }}</td>
+                    <td>{{ item.clave }}</td>
+                    <td>{{ item.placa if item.placa else '-' }}</td>
+                    <td>{{ item.estado }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay datos de ocupación.</p>
+{% endif %}
+
+<div class="form-actions" style="margin-top:10px;">
+    <a class="btn btn-secondary" href="{{ url_menu }}">Menú principal</a>
+</div>
+{% endblock %}

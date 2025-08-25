@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h2>Mover espera a Valet</h2>
+<p>Lista de vehículos en espera. Seleccione uno para mover al valet si hay espacio.</p>
+
+{% if pendientes and pendientes|length > 0 %}
+    <table border="1" cellpadding="6" cellspacing="0" style="width:100%; border-collapse:collapse; margin-top:10px;">
+        <thead>
+            <tr style="background:#f4f4f4;">
+                <th>Posición</th>
+                <th>Placa</th>
+                <th>Tipo</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in pendientes %}
+                <tr>
+                    <td>{{ p.pos }}</td>
+                    <td>{{ p.placa }}</td>
+                    <td>{{ p.tipo|upper }}</td>
+                    <td>
+                        <form action="{{ url_for('mover_espera_mover') }}" method="post" style="display:inline;">
+                            <input type="hidden" name="placa" value="{{ p.placa }}">
+                            <button class="btn" type="submit">Mover a Valet</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay vehículos en espera o no hay espacios en valet.</p>
+{% endif %}
+
+<div class="form-actions" style="margin-top:10px;">
+    <a class="btn btn-secondary" href="{{ url_menu }}">Menú principal</a>
+</div>
+{% endblock %}

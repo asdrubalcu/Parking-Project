@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h2>Ingresar vehículo</h2>
+
+<form action="{{ url_for('ingresar') }}" method="post">
+    <div class="form-row">
+        <label>Placa</label>
+        <input type="text" name="placa" value="{{ placa or '' }}" required>
+    </div>
+    <div class="form-row">
+        <label>Tipo</label>
+        <select name="tipo" required>
+            <option value="">Seleccione...</option>
+            <option value="auto" {% if datos and datos.tipo=='auto' %}selected{% endif %}>Auto</option>
+            <option value="moto" {% if datos and datos.tipo=='moto' %}selected{% endif %}>Moto</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label>Marca</label>
+        <input type="text" name="marca" value="{{ datos.marca if datos and datos.marca else '' }}">
+        <label>Modelo</label>
+        <input type="text" name="modelo" value="{{ datos.modelo if datos and datos.modelo else '' }}">
+    </div>
+    <div class="form-row">
+        <label>Color</label>
+        <input type="text" name="color" value="{{ datos.color if datos and datos.color else '' }}">
+        <div></div>
+    </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">Ingresar</button>
+        <a class="btn btn-secondary" href="{{ url_menu }}">Menú principal</a>
+    </div>
+</form>
+
+{% if opciones %}
+    <div class="ticket" style="margin-top:14px;">
+        <h3>Parqueo lleno</h3>
+        <p>Seleccione una opción disponible:</p>
+        <form action="{{ url_for('ingresar_opcion') }}" method="post">
+            <input type="hidden" name="placa" value="{{ placa }}">
+            <input type="hidden" name="tipo" value="{{ datos.tipo }}">
+            <input type="hidden" name="marca" value="{{ datos.marca }}">
+            <input type="hidden" name="modelo" value="{{ datos.modelo }}">
+            <input type="hidden" name="color" value="{{ datos.color }}">
+            {% for op in opciones %}
+                <label><input type="radio" name="seleccion" value="{{ op }}" required> {{ "Estacionar en " ~ op }}</label><br>
+            {% endfor %}
+            <div class="form-actions" style="margin-top:10px;">
+                <button class="btn" type="submit">Confirmar</button>
+            </div>
+        </form>
+    </div>
+{% endif %}
+
+{% if ticket %}
+    <div class="ticket">
+        {% if ticket.tipo_ticket == 'ingreso' %}
+            <h3>TIQUET DE INGRESO</h3>
+            <p><strong>Placa:</strong> {{ ticket.placa }}</p>
+            <p><strong>Tipo:</strong> {{ ticket.tipo|upper }}</p>
+            <p><strong>Hora de entrada:</strong> {{ ticket.hora_entrada.strftime("%d/%m/%Y %H:%M:%S") }}</p>
+            <p><strong>Espacio asignado:</strong> {{ ticket.espacio|upper }} {{ ticket.extra }}</p>
+        {% elif ticket.tipo_ticket == 'cola' %}
+            <h3>REGISTRO DE COLA DE ESPERA</h3>
+            <p><strong>Placa:</strong> {{ ticket.placa }}</p>
+            <p><strong>Tipo:</strong> {{ ticket.tipo|upper }}</p>
+            <p><strong>Hora:</strong> {{ ticket.hora_entrada.strftime("%d/%m/%Y %H:%M:%S") }}</p>
+            <p><strong>Espacio:</strong> {{ ticket.espacio|upper }} {{ ticket.extra }}</p>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}

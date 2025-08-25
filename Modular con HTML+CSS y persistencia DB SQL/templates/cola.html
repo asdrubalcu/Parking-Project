@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h2>Cola de espera</h2>
+
+{% if cola_list and cola_list|length > 0 %}
+    <table border="1" cellpadding="6" cellspacing="0">
+        <tr><th>Posición</th><th>Placa</th><th>Tipo</th></tr>
+        {% for item in cola_list %}
+            <tr>
+                <td>{{ item.pos }}</td>
+                <td>{{ item.placa }}</td>
+                <td>{{ item.tipo|upper }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>No hay vehículos en cola de espera.</p>
+{% endif %}
+
+<div class="form-actions" style="margin-top:10px;">
+    <a class="btn btn-secondary" href="{{ url_menu }}">Menú principal</a>
+</div>
+{% endblock %}

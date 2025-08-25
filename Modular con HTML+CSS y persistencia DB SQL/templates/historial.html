@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block contenido %}
+<h2>Historial por placa</h2>
+
+<form action="{{ url_for('historial') }}" method="post">
+    <div class="form-row">
+        <label>Placa</label>
+        <input type="text" name="placa" value="{{ placa or '' }}" required>
+    </div>
+    <div class="form-actions">
+        <button class="btn" type="submit">Ver historial</button>
+        <a class="btn btn-secondary" href="{{ url_menu }}">Menú principal</a>
+    </div>
+</form>
+
+{% if registros is not none %}
+    {% if registros|length > 0 %}
+        <table border="1" cellpadding="6" cellspacing="0" style="margin-top:10px;">
+            <tr>
+                <th>Placa</th>
+                <th>Tipo</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+                <th>Total</th>
+            </tr>
+            {% for r in registros %}
+                <tr>
+                    <td>{{ r.placa }}</td>
+                    <td>{{ r.tipo|upper }}</td>
+                    <td>{{ r.entrada.strftime("%d/%m/%Y %H:%M:%S") }}</td>
+                    <td>{{ r.salida.strftime("%d/%m/%Y %H:%M:%S") }}</td>
+                    <td>₡ {{ r.total }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No se encontraron registros.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}
